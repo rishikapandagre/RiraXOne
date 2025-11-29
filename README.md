@@ -13,6 +13,7 @@ Features-
 
 Folder Structure-
 RiraXOne/
+
 │
 
 ├─ app.py                  # Flask backend application
