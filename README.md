@@ -1,6 +1,6 @@
 # RiraXOne
 
-RiraXOne is a simple flight booking web application built using Python (Flask), HTML/CSS, and Bootstrap. The app allows users to search for flights, book them, and proceed to a mock payment page. This is a demo application, with mock flight data.
+RiraXOne is a simple flight booking web application built using Python (Flask), HTML/CSS,Javascript and Bootstrap. The app allows users to search for flights, book them, and proceed to a mock payment page. This is a demo application, with mock flight data.
 
 Features-
 * Search flights between major Indian cities (mock data).
