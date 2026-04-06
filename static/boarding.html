@@ -1,11 +1,19 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Boarding Pass - CONFIRMED</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" href="https://i.pinimg.com/1200x/59/0f/e7/590fe784586d6b274d278d91df2a5d8e.jpg">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="shortcut icon" href="https://i.pinimg.com/1200x/59/0f/e7/590fe784586d6b274d278d91df2a5d8e.jpg" type="image/x-icon">
+
     <style>
         body {
             font-family: 'Rubik', Arial, sans-serif;
@@ -14,40 +22,68 @@
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            padding-top: 8rem;
-            min-height: 100vh;
-            padding: 40px 20px;
+            padding-top: 120px;
+            margin: 0;
         }
+        
+        .logo {
+            font-size: 1.8rem;
+            color: #fff;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: #00c3ff;
+            margin-right: 8px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .nav a:hover {
+            color: #00c3ff;
+        }
+
+        /* ===== TICKET ===== */
         .ticket-card {
             max-width: 600px;
-            background: #ffffffc9;
+            margin: 40px auto;
+            background: #ffffffd9;
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
             border: 2px solid #013170;
-            position: absolute;  
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            overflow: hidden;
         }
+
         .ticket-card::before {
             content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            display: block;
             height: 10px;
             background-color: #013170;
+            border-radius: 10px 10px 0 0;
+            margin: -30px -30px 20px -30px;
         }
-        .header {
+
+        .header-title {
             text-align: center;
             margin-bottom: 20px;
         }
-        .header h1 {
-            color:  #013170;
+
+        .header-title h1 {
+            color: #013170;
             font-weight: 900;
         }
+
         .segment {
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -55,57 +91,55 @@
             margin-bottom: 15px;
             background: #f9f9f9;
         }
+
         .label {
             font-size: 12px;
             color: #666;
-            font-weight: 500;
             display: block;
         }
+
         .value {
             font-size: 16px;
             font-weight: 700;
-            color: #333;
         }
+
         .route-path {
             display: flex;
             justify-content: space-between;
             align-items: center;
             text-align: center;
         }
-        .route-path .code {
-            font-size: 30px;
-            font-weight: 900;
+
+        .code {
+            font-size: 28px;
+            font-weight: bold;
             color: #003478;
         }
-        .route-path .arrow {
-            font-size: 24px;
-            color: #00439a;
-        }
+
         .barcode {
-            display: block;
-            margin: 20px auto 0 auto;  
-            width: 70%;               
-            max-width: 200px;         
-            height: 80px;             
-            background-color: #fff;   
-            border: 1px solid #013170;
-            border-radius: 6px;
-            padding: 5px;             
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            text-align: center;       
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .barcode img {
+            width: 200px;
         }
     </style>
 </head>
+
 <body>
+    <!-- TICKET -->
     <div class="ticket-card" id="ticket-card" style="display:none;">
-        <div class="header">
+
+        <div class="header-title">
             <h1 id="airline-name">RiraXOne</h1>
-            <p class="text-success lead" id="status-text">BOOKING CONFIRMED!!</p>
+            <p class="text-success">BOOKING CONFIRMED!!</p>
         </div>
 
         <div id="loading">Loading confirmed ticket details...</div>
 
         <div id="content" style="display:none;">
+
             <div class="segment">
                 <div class="row">
                     <div class="col-6">
@@ -125,7 +159,9 @@
                         <div class="code" id="from-code-display"></div>
                         <span class="label" id="from-city-display"></span>
                     </div>
-                    <div class="arrow">✈️</div>
+
+                    <div>✈️</div>
+
                     <div>
                         <div class="code" id="to-code-display"></div>
                         <span class="label" id="to-city-display"></span>
@@ -140,7 +176,7 @@
                         <span class="value" id="date-display"></span>
                     </div>
                     <div class="col-4">
-                        <span class="label">DEP. TIME</span>
+                        <span class="label">TIME</span>
                         <span class="value" id="time-display"></span>
                     </div>
                     <div class="col-4">
@@ -151,22 +187,25 @@
             </div>
 
             <div class="barcode">
-                <img src="https://barcode.tec-it.com/barcode.ashx?data=BOOKING-&code=Code128&multiplelines=true&unit=mil&modulewidth=10&height=150&bgcolor=FFFFFF&color=000000" alt="Barcode" id="barcode-img">
-                <span class="label mt-2 d-block">Present this code at check-in</span>
+                <img id="barcode-img" src="">
+                <p class="label">Present this code at check-in</p>
             </div>
+
         </div>
     </div>
 
     <script>
-        const apiBase = window.location.origin.startsWith('http') ? window.location.origin : 'http://127.0.0.1:5000';
+        const apiBase = window.location.origin.startsWith('http')
+            ? window.location.origin
+            : 'http://127.0.0.1:5000';
 
         function getQueryParam(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
+            return new URLSearchParams(window.location.search).get(name);
         }
 
         async function loadBoardingPass() {
             const bookingId = getQueryParam('booking_id');
+
             const loading = document.getElementById('loading');
             const content = document.getElementById('content');
             const ticketCard = document.getElementById('ticket-card');
@@ -174,50 +213,45 @@
             ticketCard.style.display = 'block';
 
             if (!bookingId) {
-                loading.innerText = 'Missing booking ID in URL.';
+                loading.innerText = 'Missing booking ID.';
                 return;
             }
 
             try {
-                // API Call to the Flask backend
                 const res = await fetch(`${apiBase}/booking/${bookingId}`);
                 const data = await res.json();
 
                 loading.style.display = 'none';
 
                 if (!res.ok) {
-                    content.innerHTML = `<div class="alert alert-danger">${data.error || 'Failed to retrieve ticket. Booking not found or payment failed.'}</div>`;
+                    content.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
                     content.style.display = 'block';
                     return;
                 }
-                
-                // Populate fields
-                document.getElementById('airline-name').innerText = data.airline_name || 'RiraXOne';
-                document.getElementById('pnr-display').innerText = data.pnr || 'N/A';
-                document.getElementById('flight-class-display').innerText = `${data.flight_id || 'M999'}/${data.class || 'ECO'}`;
-                
-                document.getElementById('from-code-display').innerText = data.from_code || 'N/A';
-                document.getElementById('from-city-display').innerText = data.from_city || 'Origin';
-                document.getElementById('to-code-display').innerText = data.to_code || 'N/A';
-                document.getElementById('to-city-display').innerText = data.to_city || 'Destination';
 
-                document.getElementById('date-display').innerText = data.travel_date || 'N/A';
-                document.getElementById('time-display').innerText = data.departure_time || 'N/A';
-                document.getElementById('passengers-display').innerText = data.passengers || 1;
+                document.getElementById('pnr-display').innerText = data.pnr;
+                document.getElementById('flight-class-display').innerText = `${data.flight_id}/${data.class}`;
+                document.getElementById('from-code-display').innerText = data.from_code;
+                document.getElementById('from-city-display').innerText = data.from_city;
+                document.getElementById('to-code-display').innerText = data.to_code;
+                document.getElementById('to-city-display').innerText = data.to_city;
+                document.getElementById('date-display').innerText = data.travel_date;
+                document.getElementById('time-display').innerText = data.departure_time;
+                document.getElementById('passengers-display').innerText = data.passengers;
 
-                // Update barcode image using the PNR
-                const barcodeUrl = `https://barcode.tec-it.com/barcode.ashx?data=${data.pnr || 'TICKET'}&code=Code128&multiplelines=true&unit=mil&modulewidth=10&height=150&bgcolor=FFFFFF&color=000000`;
-                document.getElementById('barcode-img').src = barcodeUrl;
+                document.getElementById('barcode-img').src =
+                    `https://barcode.tec-it.com/barcode.ashx?data=${data.pnr}&code=Code128`;
 
                 content.style.display = 'block';
-                
+
             } catch (err) {
-                console.error(err);
-                loading.innerText = 'Network error while fetching ticket details. Is the app.py server running?';
+                loading.innerText = 'Server not running or network error.';
             }
         }
 
         document.addEventListener('DOMContentLoaded', loadBoardingPass);
     </script>
+
 </body>
+
 </html>
