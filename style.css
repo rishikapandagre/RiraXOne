@@ -421,7 +421,25 @@ header .nav a:hover {
   align-items: end;
 }
 
+#passenger-dropdown .counter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+#passenger-dropdown .counter button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  cursor: pointer;
+}
+
 /* Inputs */
+/* ---------- INPUTS & SELECT BOX ---------- */
 .input-box label {
   font-size: 2.5rem;
   font-weight: 500;
@@ -450,46 +468,68 @@ header .nav a:hover {
 .select-box {
   cursor: pointer;
   position: relative;
+  user-select: none;
 }
 
-/* Dropdown positioned on right side of page */
+/* ---------- DROPDOWNS ---------- */
 .dropdown {
   display: none;
-  position: fixed;
-  top: 20%;
-  right: 5%;
-  width: 280px;
+  position: fixed;        
+  top: 20%;               
+  right: 5%;              
+  width: 250px;           
   background: #ffffff;
   border: 1px solid #dce6f5;
   border-radius: 1rem;
-  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1rem 2rem rgba(0,0,0,0.15);
   padding: 1.5rem;
   z-index: 9999;
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateX(30px);  
   transition: all 0.25s ease;
-  text-align: left;
 }
 
 .dropdown.active {
   display: block;
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
 }
 
-/* Passenger and Class row alignment */
-.passenger-row,
-#class-dropdown label {
-  text-align: left;
+/* ---------- PASSENGER DROPDOWN ---------- */
+#passenger-dropdown .counter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 0.5rem;
 }
 
-/* Class dropdown radio buttons neatly left of text */
+#passenger-dropdown .counter button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  cursor: pointer;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+#passenger-dropdown .count {
+  display: inline-block;
+  width: 28px;
+  text-align: center;
+  font-size: 1.6rem;
+}
+
+/* ---------- CLASS DROPDOWN ---------- */
 #class-dropdown label {
   display: flex;
   align-items: center;
   gap: 0.8rem;
   font-size: 1.6rem;
-  margin: 1rem 0;
+  margin: 0.6rem 0;
   color: #003b7a;
   cursor: pointer;
 }
@@ -502,22 +542,50 @@ header .nav a:hover {
   cursor: pointer;
 }
 
-/* Confirm button style */
+/* ---------- CONFIRM BUTTON ---------- */
 .confirm-btn {
   width: 100%;
-  background: #003b7a;
+  background: #003772;
   color: #ffffff;
-  padding: .9rem;
+  padding: 0.9rem;
   font-size: 1.5rem;
   border: none;
   border-radius: 0.6rem;
   margin-top: 1.5rem;
   cursor: pointer;
-  transition: background .3s;
+  transition: background 0.3s;
 }
 .confirm-btn:hover {
   background: #002b5c;
 }
+
+/* ---------- GENERAL ALIGNMENTS ---------- */
+.passenger-row,
+#class-dropdown label {
+  text-align: left;
+}
+
+/* ---------- OPTIONAL: Style for Airport dropdown radios ---------- */
+#from-dropdown label,
+#to-dropdown label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.6rem;
+  margin: 0.5rem 0;
+  cursor: pointer;
+  color: #003b7a;
+}
+
+#from-dropdown input[type="radio"],
+#to-dropdown input[type="radio"] {
+  accent-color: #009dff;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin: 0;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .book {
     padding: 6rem 5%;
