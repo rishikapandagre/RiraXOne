@@ -12,6 +12,7 @@ Features-
 * Interactive ticket card with barcode-style booking reference.
 
 Folder Structure-
+
 <img width="641" height="300" alt="Screenshot 2026-04-07 123202" src="https://github.com/user-attachments/assets/0f377e71-af34-432d-801f-8f247a341762" />
 
 Requirements-
