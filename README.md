@@ -12,18 +12,7 @@ Features-
 * Interactive ticket card with barcode-style booking reference.
 
 Folder Structure-
-RiraXOne/
-│
-├─ app.py                     # Flask backend application
-├─ templates/                 # HTML templates
-│   └─ RiraXOne.html          # Main landing page
-├─ env/                       # Python virtual environment
-├─ static/                    # Static files
-│   ├─ style.css               # Global CSS
-│   ├─ flight.html             # Flight search results page
-│   ├─ book.html               # Booking page
-│   ├─ boarding.html           # Boarding pass page
-│   └─ payment.html            # Payment confirmation page
+<img width="641" height="300" alt="Screenshot 2026-04-07 123202" src="https://github.com/user-attachments/assets/0f377e71-af34-432d-801f-8f247a341762" />
 
 Requirements-
 Python 3.8+
