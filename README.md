@@ -14,15 +14,25 @@ Features-
 Folder Structure-
 RiraXOne/
 │
+
 ├─ app.py                     # Flask backend application
+
 ├─ templates/                 # Main landing page
+
     ├─ RiraXOne.html     
+
 ├─ env/                       # Python virtual environment
+
 ├─ static/                    # Static HTML pages
+
    ├─ style.css               # Global CSS
+   
    ├─ flight.html             # Flight search results page
+   
    ├─ book.html               # Booking page
+   
    ├─ boarding.html           # Boarding pass page 
+   
    └─ payment.html            # Payment confirmation page
 
 Requirements-
