@@ -16,7 +16,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
   <style>
     /* Inline fixes for popups & dropdowns */
@@ -135,6 +135,7 @@
     <div class="user-menu" id="user-menu" role="menu" aria-hidden="true">
       <a href="#" id="login-link">Login</a>
       <a href="#" id="signup-link">Sign Up</a>
+      <a href="#" id="logout-link">Logout</a>
     </div>
 
     <!-- Login Popup -->
@@ -581,115 +582,158 @@
 
   <!-- Custom JS -->
   <script>
-    // ---------- POPUP HANDLER ----------
+    // ---------- ELEMENTS ----------
     const userBtn = document.getElementById('user-btn');
     const userMenu = document.getElementById('user-menu');
-    const loginFormEl = document.getElementById('login-form');
-    const signupFormEl = document.getElementById('signup-form');
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
     const loginLink = document.getElementById('login-link');
     const signupLink = document.getElementById('signup-link');
     const closeButtons = document.querySelectorAll('[data-close], .close-btn');
 
+    // ---------- HIDE ALL ----------
     function hideAllPopups() {
-      userMenu.classList.remove('active');
-      userMenu.setAttribute('aria-hidden', 'true');
-      userBtn.setAttribute('aria-expanded', 'false');
-      loginFormEl.classList.remove('active');
-      loginFormEl.setAttribute('aria-hidden', 'true');
-      signupFormEl.classList.remove('active');
-      signupFormEl.setAttribute('aria-hidden', 'true');
+      [userMenu, loginForm, signupForm].forEach(el => {
+        if (el) {
+          el.classList.remove('active');
+          el.setAttribute('aria-hidden', 'true');
+        }
+      });
     }
 
+    // ---------- SHOW POPUP ----------
     function showPopup(popupEl) {
       hideAllPopups();
       popupEl.classList.add('active');
       popupEl.setAttribute('aria-hidden', 'false');
-      const firstInput = popupEl.querySelector('input, button, textarea, select');
+
+      const firstInput = popupEl.querySelector('input');
       if (firstInput) firstInput.focus();
     }
 
-    userBtn.addEventListener('click', e => {
+    // ---------- USER MENU ----------
+    userBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const isOpen = userMenu.classList.contains('active');
-      hideAllPopups();
-      if (!isOpen) {
-        userMenu.classList.add('active');
-        userMenu.setAttribute('aria-hidden', 'false');
-        userBtn.setAttribute('aria-expanded', 'true');
+      userMenu.classList.toggle('active');
+    });
+
+    loginLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      showPopup(loginForm);
+    });
+
+    signupLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      showPopup(signupForm);
+    });
+
+    // ---------- CLOSE BUTTONS ----------
+    closeButtons.forEach(btn => {
+      btn.addEventListener('click', hideAllPopups);
+    });
+
+    // ---------- OUTSIDE CLICK ----------
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.form-box') && !e.target.closest('#user-btn')) {
+        hideAllPopups();
       }
     });
 
-    loginLink.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); showPopup(loginFormEl); });
-    signupLink.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); showPopup(signupFormEl); });
-
-    closeButtons.forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); hideAllPopups(); }));
-    window.addEventListener('click', e => { if (!e.target.closest('.form-box') && !e.target.closest('#user-menu') && !e.target.closest('#user-btn')) hideAllPopups(); });
-    window.addEventListener('keydown', e => { if (e.key === 'Escape') hideAllPopups(); });
-    document.querySelectorAll('.popup-form .form-box').forEach(box => box.addEventListener('click', e => e.stopPropagation()));
-
-    // ---------- LOGIN / SIGNUP ----------
-    const loginForm = document.getElementById('loginFormLocal');
-    const signupForm = document.getElementById('signupFormLocal');
-
-    // ----- Signup -----
-    signupForm.addEventListener('submit', async (e) => {
+    // ---------- SIGNUP ----------
+    document.getElementById('signupFormLocal').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('signup-email').value.trim();
+
+      const email = document.getElementById('signup-email').value;
       const password = document.getElementById('signup-password').value;
       const confirm = document.getElementById('signup-confirm').value;
 
       if (password !== confirm) {
-        alert('Passwords do not match');
+        alert("Passwords do not match!");
         return;
       }
 
-      try {
-        const res = await fetch('/signup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          alert('Signup successful! You can now login.');
-          hideAllPopups();
-          signupForm.reset();
-        } else {
-          alert(data.error || 'Signup failed');
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Something went wrong. Try again.');
+      const res = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: email.split('@')[0],
+          email,
+          password
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Signup successful! Please login.");
+        showPopup(loginForm);
+      } else {
+        alert(data.error);
       }
     });
 
-    // ----- Login -----
-    loginForm.addEventListener('submit', async (e) => {
+    // ---------- LOGIN ----------
+    document.getElementById('loginFormLocal').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('login-email').value.trim();
+
+      const email = document.getElementById('login-email').value;
       const password = document.getElementById('login-password').value;
 
-      try {
-        const res = await fetch('/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          alert('Login successful! Welcome ' + email);
-          hideAllPopups();
-          loginForm.reset();
-          localStorage.setItem('user', JSON.stringify(data.user)); // store session
-        } else {
-          alert(data.error || 'Login failed');
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Something went wrong. Try again.');
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Login successful!");
+
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
+
+        updateUIAfterLogin(data.username);
+
+        hideAllPopups();
+      } else {
+        alert(data.error);
       }
     });
 
+    // ---------- UPDATE UI AFTER LOGIN ----------
+    function updateUIAfterLogin(username) {
+      userBtn.innerHTML = `<i class="fas fa-user"></i> ${username}`;
+
+      userMenu.innerHTML = `
+      <a href="#" id="logout-link">Logout</a>
+    `;
+
+      document.getElementById('logout-link').addEventListener('click', logoutHandler);
+    }
+
+    // ---------- LOGOUT ----------
+    function logoutHandler(e) {
+      e.preventDefault();
+
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+
+      alert("Logged out successfully!");
+
+      location.reload();
+    }
+
+    // ---------- LOAD USER ON REFRESH ----------
+    window.addEventListener('load', () => {
+      const savedUser = localStorage.getItem('username');
+
+      if (savedUser) {
+        updateUIAfterLogin(savedUser);
+      }
+    });
     // ---------- NAVBAR ----------
     const menuBtn = document.getElementById('menu-btn');
     const navbar = document.getElementById('navbar');
@@ -728,13 +772,19 @@
 
     confirmFrom.addEventListener('click', () => {
       const selected = document.querySelector('input[name="from-airport"]:checked');
-      if (selected) { fromBtn.textContent = selected.value; fromInput.value = selected.value; }
+      if (selected) {
+        fromBtn.textContent = selected.value;
+        fromInput.value = selected.value;
+      }
       fromDropdown.classList.remove('active');
     });
 
     confirmTo.addEventListener('click', () => {
       const selected = document.querySelector('input[name="to-airport"]:checked');
-      if (selected) { toBtn.textContent = selected.value; toInput.value = selected.value; }
+      if (selected) {
+        toBtn.textContent = selected.value;
+        toInput.value = selected.value;
+      }
       toDropdown.classList.remove('active');
     });
 
@@ -751,7 +801,10 @@
     classBtn.addEventListener('click', e => { e.stopPropagation(); closeAllDropdowns(); classDropdown.classList.toggle('active'); });
     confirmClassBtn.addEventListener('click', () => {
       const selected = document.querySelector('input[name="class-select"]:checked');
-      if (selected) { classBtn.textContent = selected.value; classInput.value = selected.value; }
+      if (selected) {
+        classBtn.textContent = selected.value;
+        classInput.value = selected.value;
+      }
       classDropdown.classList.remove('active');
     });
 
@@ -814,9 +867,10 @@
         return;
       }
 
-      // Redirect to flight search page with query params
+      // Redirect with query params
       window.location.href = `/static/flight.html?source=${source}&destination=${destination}&date=${date}&class=${flightClass}&passengers=${totalPassengers}`;
     });
+
   </script>
 </body>
 
